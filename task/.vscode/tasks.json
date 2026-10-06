@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "▶ Запустить текущий C# файл",
+            "type": "shell",
+            "command": "dotnet run \"${file}\"",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "🔨 Собрать .EXE",
+            "type": "shell",
+            "command": "dotnet publish \"${file}\" -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o \"${fileDirname}/dist\"; Write-Host 'Сборка завершена! Готовый .exe файл находится в папке dist/' -ForegroundColor Green",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "➕ Создать проект C# (.NET 8)",
+            "type": "shell",
+            "command": "dotnet new ${input:projectType} -n ${input:projectName} -f net8.0; dotnet new sln -n ${input:projectName} 2>$null; dotnet sln ${input:projectName}.sln add ${input:projectName}/${input:projectName}.csproj 2>$null; Write-Host '=== Проект C# (.NET 8) успешно создан! ===' -ForegroundColor Green",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "projectName",
+            "type": "promptString",
+            "description": "Имя нового проекта C#:",
+            "default": "MyCSharpApp"
+        },
+        {
+            "id": "projectType",
+            "type": "pickString",
+            "description": "Тип проекта C#:",
+            "options": [
+                { "label": "Консольное приложение (Console App)", "value": "console" },
+                { "label": "Веб-API (ASP.NET Core Web API)", "value": "webapi" },
+                { "label": "Веб-приложение (ASP.NET Core Web App)", "value": "webapp" },
+                { "label": "Библиотека классов (Class Library)", "value": "classlib" }
+            ],
+            "default": "console"
+        }
+    ]
+}

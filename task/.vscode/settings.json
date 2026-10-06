@@ -1,0 +1,28 @@
+{
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "$(play) Запустить C#",
+            "task": "▶ Запустить текущий C# файл",
+            "tooltip": "Запустить активный C# файл"
+        },
+        {
+            "label": "$(package) Собрать .EXE",
+            "task": "🔨 Собрать .EXE",
+            "tooltip": "Скомпилировать файл в автономный .exe"
+        },
+        {
+            "label": "$(plus) Создать проект",
+            "task": "➕ Создать проект C# (.NET 8)",
+            "tooltip": "Создать новый проект C#"
+        }
+    ],
+    "code-runner.runInTerminal": true,
+    "code-runner.fileDirectoryAsCwd": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.executorMap": {
+        "csharp": "dotnet run $fileName"
+    },
+    "git.enabled": true,
+    "git.path": "C:\\Program Files\\Git\\cmd\\git.exe",
+    "git.autofetch": true
+}
