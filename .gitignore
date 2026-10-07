@@ -1,0 +1,21 @@
+## Visual Studio / Antigravity IDE / VS Code
+.vs/
+**/.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+## Сборка и компиляция C#
+[Bb]in/
+[Oo]bj/
+**/bin/
+**/obj/
+[Dd]ist/
+**/dist/
+
+## Временные файлы
+*.tmp
+*.log
+.DS_Store
+Thumbs.db

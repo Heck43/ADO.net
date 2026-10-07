@@ -2,9 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "▶ Запустить текущий C# файл",
+            "label": "▶ Запустить C# (проект или файл)",
             "type": "shell",
-            "command": "dotnet run \"${file}\"",
+            "command": "if (Get-ChildItem -Filter *.csproj) { dotnet run } else { dotnet run \"${file}\" }",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
@@ -15,7 +18,7 @@
         {
             "label": "🔨 Собрать .EXE",
             "type": "shell",
-            "command": "dotnet publish \"${file}\" -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o \"${fileDirname}/dist\"; Write-Host 'Сборка завершена! Готовый .exe файл находится в папке dist/' -ForegroundColor Green",
+            "command": "if (Get-ChildItem -Path \"${fileDirname}\" -Filter *.csproj) { dotnet publish \"${fileDirname}\" -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o \"${fileDirname}/dist\" } else { dotnet publish \"${file}\" -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o \"${fileDirname}/dist\" }; Write-Host 'Сборка завершена! Готовый .exe файл находится в папке dist/' -ForegroundColor Green",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -30,7 +33,24 @@
         {
             "label": "➕ Создать проект C# (.NET 8)",
             "type": "shell",
-            "command": "dotnet new ${input:projectType} -n ${input:projectName} -f net8.0; dotnet new sln -n ${input:projectName} 2>$null; dotnet sln ${input:projectName}.sln add ${input:projectName}/${input:projectName}.csproj 2>$null; Write-Host '=== Проект C# (.NET 8) успешно создан! ===' -ForegroundColor Green",
+            "command": "$pt = '${input:projectType}'.Replace('-npgsql', ''); dotnet new $pt -n '${input:projectName}' -o '${input:projectName}' -f net8.0; if ('${input:projectType}' -like '*npgsql*') { dotnet add '${input:projectName}/${input:projectName}.csproj' package Npgsql; $b64 = 'dXNpbmcgTnBnc3FsOw0KDQpzdHJpbmcgY29ubnN0cmluZyA9ICJIb3N0PWxvY2FsaG9zdDtQb3J0PTU0MzI7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9ZnVyNDM7RGF0YWJhc2U9eHoxIjsNCg0KDQp1c2luZyB2YXIgY29ubiA9IG5ldyBOcGdzcWxDb25uZWN0aW9uKGNvbm5zdHJpbmcpOw0KdHJ5DQp7DQogICAgY29ubi5PcGVuKCk7DQogICAgQ29uc29sZS5Xcml0ZUxpbmUoItCf0L7QtNC60LvRjtGH0LXQvdC+ISIpOw0KICAgIHN0cmluZyBzcWwgPSBAIg0KICAgIA0KICAgIA0KICAgICI7DQogICAgDQp9DQpjYXRjaCAoTnBnc3FsRXhjZXB0aW9uIGV4KQ0Kew0KICAgIENvbnNvbGUuV3JpdGVMaW5lKCQi0J7RiNC40LXQutCwOiB7ZXguTWVzc2FnZX0iKTsNCn0NCg=='; [System.IO.File]::WriteAllBytes('${input:projectName}/Program.cs', [System.Convert]::FromBase64String($b64)) }; Write-Host '=== Проект C# (.NET 8) успешно создан в папке ${input:projectName}! ===' -ForegroundColor Green",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "🐘 Добавить Npgsql в текущий проект",
+            "type": "shell",
+            "command": "dotnet add package Npgsql; Write-Host 'Библиотека Npgsql успешно подключена!' -ForegroundColor Green",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
@@ -43,20 +63,21 @@
         {
             "id": "projectName",
             "type": "promptString",
-            "description": "Имя нового проекта C#:",
-            "default": "MyCSharpApp"
+            "description": "Имя папки/проекта (например: task8):",
+            "default": "task8"
         },
         {
             "id": "projectType",
             "type": "pickString",
             "description": "Тип проекта C#:",
             "options": [
-                { "label": "Консольное приложение (Console App)", "value": "console" },
-                { "label": "Веб-API (ASP.NET Core Web API)", "value": "webapi" },
-                { "label": "Веб-приложение (ASP.NET Core Web App)", "value": "webapp" },
-                { "label": "Библиотека классов (Class Library)", "value": "classlib" }
+                { "label": "🐘 Консольное приложение + PostgreSQL (Npgsql с шаблоном)", "value": "console-npgsql" },
+                { "label": "📄 Консольное приложение (чистое)", "value": "console" },
+                { "label": "🐘 Веб-API + PostgreSQL (Npgsql)", "value": "webapi-npgsql" },
+                { "label": "🌐 Веб-API (чистое)", "value": "webapi" },
+                { "label": "📚 Библиотека классов (Class Library)", "value": "classlib" }
             ],
-            "default": "console"
+            "default": "console-npgsql"
         }
     ]
 }
