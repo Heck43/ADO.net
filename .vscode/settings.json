@@ -51,5 +51,8 @@
         "images": [
             "https://i.ibb.co/3mSzp90d/1086293984.webp"
         ]
+    },
+    "workbench.editorAssociations": {
+        "*.resx": "resx.editor"
     }
 }
