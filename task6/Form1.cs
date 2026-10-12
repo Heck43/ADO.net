@@ -20,6 +20,19 @@ public partial class Form1 : Form
         DateTime birthDate = dtpAddBirthDate.Value.Date;
         string email = txtAddEmail.Text.Trim();
         string phoneStr = txtAddPhone.Text.Trim();
+        string namePattern = @"^[a-zA-Zа-яА-ЯёЁ-]+$";
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(firstName, namePattern))
+        {
+            MessageBox.Show("Имя может содержать только буквы (цифры и спецсимволы запрещены)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(lastName, namePattern))
+        {
+            MessageBox.Show("Фамилия может содержать только буквы (цифры и спецсимволы запрещены)!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || string.IsNullOrWhiteSpace(email))
         {
@@ -191,7 +204,7 @@ public partial class Form1 : Form
 
     private void LoadAllClients()
     {
-        ExecuteQueryToGrid("SELECT * FROM clients ORDER BY client_id;");
+        ExecuteQueryToGrid("SELECT * FROM clients where status = 'active' ORDER BY client_id ;");
     }
 
     private void ExecuteQueryToGrid(string sql)
